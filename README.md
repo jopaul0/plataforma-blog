@@ -29,6 +29,17 @@ O projeto foi desenvolvido como trabalho acadêmico da disciplina de Desenvolvim
 
 ---
 
+## Backlog e MVP
+
+O desenvolvimento da plataforma foi planejado em duas etapas principais, garantindo a entrega de um **MVP (Minimum Viable Product)** funcional logo no primeiro ciclo, seguido pela adição de recursos sociais.
+
+- **Sprint 1 (O MVP):** Foco no núcleo da plataforma. Inclui toda a base de autenticação de usuários, rotas protegidas, feed na página inicial e o CRUD completo de posts (criar, ler, atualizar e deletar) junto com o dashboard do autor.
+- **Sprint 2 (Recursos Sociais):** Foco na interação e comunidade. Adição de perfis públicos de autores, sistema de comentários nos posts e mecânica de curtidas.
+
+> Para conferir as User Stories completas, prioridades e o detalhamento das tarefas técnicas, acesse o **[Backlog do Produto](./docs/backlog.md)**.
+
+---
+
 ## Stack tecnológica
 
 ### Frontend
