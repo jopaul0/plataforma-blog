@@ -16,6 +16,8 @@
 
 O projeto foi desenvolvido como trabalho acadêmico da disciplina de Desenvolvimento Web, aplicando conceitos de arquitetura REST, autenticação com JWT e modelagem relacional de dados.
 
+>  [Protótipo do projeto no figma](https://www.figma.com/design/o1qHZ077tyQB7NJSYxiP8Y/Blog?node-id=0-1&t=c5IiN9liwL6PD8WS-1)
+
 ---
 
 ## Funcionalidades
