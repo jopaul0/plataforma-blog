@@ -48,8 +48,7 @@ O desenvolvimento da plataforma foi planejado em duas etapas principais, garanti
 | Tecnologia | Uso |
 |---|---|
 | React + TypeScript | Interface e tipagem |
-| Vite | Bundler e dev server |
-| Axios | Chamadas HTTP |
+| Next.js | Bundler e dev server |
 | Tailwind CSS | Estilização |
 
 ### Backend
