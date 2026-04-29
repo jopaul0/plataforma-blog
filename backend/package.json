@@ -5,15 +5,6 @@
   "description": "Um projeto de API com Node.js e Express, TypeScript e Prisma, para uma plataforma de blogs online.",
   "homepage": "https://github.com/jopaul0/plataforma-blog",
   "license": "MIT",
-  "keywords": [
-    "node",
-    "express",
-    "typescript",
-    "prisma",
-    "api",
-    "credit-analysis",
-    "regional-data"
-  ],
   "main": "src/server.ts",
   "type": "module",
   "scripts": {
@@ -23,7 +14,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@prisma/adapter-better-sqlite3": "^7.5.0",
     "@prisma/client": "^7.5.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
@@ -35,7 +25,6 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.13",
     "@types/express": "^5.0.6",
     "@types/node": "^25.5.0",
     "prisma": "^7.5.0",

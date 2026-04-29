@@ -1,0 +1,37 @@
+services:
+  # Banco de Dados
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: user_admin
+      POSTGRES_PASSWORD: password_123
+      POSTGRES_DB: portal_lux_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Backend (Node.js + Prisma)
+  backend:
+    build: ./backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: "postgresql://user_admin:password_123@db:5432/portal_lux_db?schema=public"
+    depends_on:
+      - db
+
+  # Frontend (React/Next.js)
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - API_URL=http://localhost:3000
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
