@@ -1,7 +1,7 @@
 services:
-  # Banco de Dados
   db:
     image: postgres:15-alpine
+    container_name: postgres_db
     restart: always
     environment:
       POSTGRES_USER: user_admin
@@ -12,24 +12,25 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  # Backend (Node.js + Prisma)
   backend:
     build: ./backend
+    container_name: backend_app
     restart: always
+    env_file:
+      - ./backend/.env
     ports:
       - "3000:3000"
-    environment:
-      DATABASE_URL: "postgresql://user_admin:password_123@db:5432/portal_lux_db?schema=public"
     depends_on:
       - db
 
-  # Frontend (React/Next.js)
   frontend:
     build: ./frontend
+    container_name: frontend_app
+    restart: always
+    env_file:
+      - ./frontend/.env
     ports:
       - "5173:5173"
-    environment:
-      - API_URL=http://localhost:3000
     depends_on:
       - backend
 
