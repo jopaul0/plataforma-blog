@@ -1,6 +1,4 @@
-# Plataforma de Blog
-
-> Lembrete: Decidir nome definitivo do projeto!!
+# Portal Lux
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square&logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black)
@@ -12,7 +10,7 @@
 
 ## Sobre o projeto
 
-**Plataforma de Blog** é uma plataforma de publicação de blogs com foco em simplicidade e experiência do usuário. Usuários podem criar uma conta, publicar posts, editar e deletar seu próprio conteúdo, comentar em posts de outros autores e expressar sua opinião com curtidas.
+**Portal Lux** é uma plataforma de publicação de blogs com foco em simplicidade e experiência do usuário. Usuários podem criar uma conta, publicar posts, editar e deletar seu próprio conteúdo, comentar em posts de outros autores e expressar sua opinião com curtidas.
 
 O projeto foi desenvolvido como trabalho acadêmico da disciplina de Desenvolvimento Web, aplicando conceitos de arquitetura REST, autenticação com JWT e modelagem relacional de dados.
 
@@ -48,8 +46,7 @@ O desenvolvimento da plataforma foi planejado em duas etapas principais, garanti
 | Tecnologia | Uso |
 |---|---|
 | React + TypeScript | Interface e tipagem |
-| Vite | Bundler e dev server |
-| Axios | Chamadas HTTP |
+| Next.js | Bundler e dev server |
 | Tailwind CSS | Estilização |
 
 ### Backend

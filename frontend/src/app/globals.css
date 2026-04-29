@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+:root {
+  --color-background: #FDFAF4;
+  --color-surface: #F5F0E8;
+  --color-border: #DDD5C8;
+
+  --color-text: #1A1612;
+  --color-text-muted: #6B5F54;
+
+  --color-primary: #C8805A;
+  --color-primary-hover: #A85C3A;
+
+  --color-secondary: #7A8C6E;
+  --color-tertiary: #C9A84C;
+
+  --font-sans: var(--font-dm-sans);
+  --font-title: var(--font-amita);
+  --font-tag: var(--font-tag-alt);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #1A1612;
+    --color-surface: #2A241F;
+    --color-border: #3A332D;
+
+    --color-text: #FDFAF4;
+    --color-text-muted: #DDD5C8;
+
+    --color-primary: #C8805A;
+    --color-primary-hover: #A85C3A;
+
+    --color-secondary: #7A8C6E;
+    --color-tertiary: #C9A84C;
+  }
+}
+
+.dark {
+  --color-background: #1A1612;
+  --color-surface: #2A241F;
+  --color-border: #3A332D;
+
+  --color-text: #FDFAF4;
+  --color-text-muted: #DDD5C8;
+}
+
+@theme inline {
+  --color-background: var(--color-background);
+  --color-surface: var(--color-surface);
+  --color-border: var(--color-border);
+
+  --color-text: var(--color-text);
+  --color-text-muted: var(--color-text-muted);
+
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+
+  --color-secondary: var(--color-secondary);
+  --color-tertiary: var(--color-tertiary);
+
+  --font-sans: var(--font-sans);
+  --font-title: var(--font-title);
+  --font-tag: var(--font-tag);
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  transition: background 0.3s, color 0.3s;
+}
