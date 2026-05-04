@@ -2,7 +2,9 @@ import { Request, Response } from 'express';
 import { hash } from 'bcryptjs';
 import { prisma } from '../lib/prisma';
 import { AppError } from '../lib/error';
-import { registerSchema } from '../schemas/auth.schemas';
+import { registerSchema, loginSchema } from '../schemas/auth.schemas';
+import { compare } from 'bcryptjs';
+import { sign } from 'jsonwebtoken';
 
 export const register = async (req: Request, res: Response) => {
 
@@ -48,5 +50,49 @@ export const register = async (req: Request, res: Response) => {
     return res.status(201).json({
         message: 'Usuário criado com sucesso',
         user
+    });
+};
+
+export const login = async (req: Request, res: Response) => {
+    const result = loginSchema.safeParse(req.body);
+
+    if (!result.success) {
+        const message = result.error.issues.map(err => err.message).join(', ');
+        throw new AppError(message, 400);
+    }
+
+    const { email, password } = result.data;
+
+    const user = await prisma.user.findUnique({
+        where: { email }
+    });
+
+    if (!user) {
+        throw new AppError('E-mail ou senha incorretos', 401);
+    }
+
+    const passwordMatch = await compare(password, user.password);
+
+    if (!passwordMatch) {
+        throw new AppError('E-mail ou senha incorretos', 401);
+    }
+
+    const token = sign(
+        {},
+        process.env.JWT_SECRET || 'default_secret',
+        {
+            subject: user.id,
+            expiresIn: '7d',
+        }
+    );
+
+    return res.json({
+        user: {
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            email: user.email,
+        },
+        token
     });
 };
