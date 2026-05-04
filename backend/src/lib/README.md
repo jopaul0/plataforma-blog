@@ -1,0 +1,3 @@
+# Lib
+
+Código de bibliotecas.
