@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
-import { AppError } from '../lib/AppError';
-import { TokenPayload } from '../@types/token';
+import { AppError } from '../lib/error';
+import { TokenPayload } from '../@types/auth.types';
 
 export const isAuthenticated = (
     req: Request,
