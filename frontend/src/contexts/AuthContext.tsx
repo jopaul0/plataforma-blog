@@ -8,7 +8,7 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
-    const isAuthenticated = !!user;
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const token = localStorage.getItem('@PortalLux:token');
@@ -18,6 +18,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setUser(JSON.parse(userData));
             api.defaults.headers.authorization = `Bearer ${token}`;
         }
+
+        setLoading(false);
     }, []);
 
     function signIn({ user, token }: { user: User; token: string }) {
@@ -36,7 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated, signIn, signOut }}>
+        <AuthContext.Provider value={{ user, isAuthenticated: !!user, loading, signIn, signOut }}>
             {children}
         </AuthContext.Provider>
     );
