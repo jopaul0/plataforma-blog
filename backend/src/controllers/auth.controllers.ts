@@ -11,7 +11,7 @@ export const register = async (req: Request, res: Response) => {
         const message = result.error.issues.map(err => err.message).join(', ');
         throw new AppError(message, 400);
     }
-    const { name, email, password } = result.data;
+    const { name, username, email, password } = result.data;
 
     const userExists = await prisma.user.findUnique({ where: { email } });
     if (userExists) {
@@ -23,12 +23,14 @@ export const register = async (req: Request, res: Response) => {
     const user = await prisma.user.create({
         data: {
             name,
+            username,
             email,
             password: hashedPassword,
         },
         select: {
             id: true,
             name: true,
+            username: true,
             email: true,
             createdAt: true,
         },

@@ -7,29 +7,21 @@ import { FormTrackProps } from '@/types/components/LoginPageProps'
 export function FormTrack({ isLogin, toggle }: FormTrackProps) {
     return (
         <>
-            <div className="overflow-hidden mb-6">
-                <AnimatePresence mode="wait" initial={false}>
-                    <motion.h1
-                        key={isLogin ? 'entrar' : 'criar'}
-                        initial={{ opacity: 0, x: isLogin ? -24 : 24 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: isLogin ? 24 : -24 }}
-                        transition={{ duration: 0.38, ease: [0.76, 0, 0.24, 1] }}
-                        className="font-title text-4xl text-primary text-center"
-                    >
-                        {isLogin ? 'Entrar' : 'Criar Conta'}
-                    </motion.h1>
-                </AnimatePresence>
-            </div>
-
             <div className="w-full overflow-hidden">
                 <motion.div
                     animate={{ x: isLogin ? '0%' : '-50%' }}
                     transition={AUTH_SPRING}
-                    className="flex w-[200%]"
+                    className="flex w-[200%] h-full"
                 >
-                    <div className="w-1/2 flex-shrink-0"><LoginForm /></div>
-                    <div className="w-1/2 flex-shrink-0"><RegisterForm /></div>
+                    {/* Container do Login */}
+                    <div className="w-1/2 flex-shrink-0 flex flex-col justify-center px-2">
+                        <LoginForm />
+                    </div>
+
+                    {/* Container do Registro */}
+                    <div className="w-1/2 flex-shrink-0 flex flex-col justify-center px-2">
+                        <RegisterForm />
+                    </div>
                 </motion.div>
             </div>
 

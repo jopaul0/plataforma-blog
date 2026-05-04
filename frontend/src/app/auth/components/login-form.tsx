@@ -6,6 +6,7 @@ import { Button } from '@/components/Button'
 export function LoginForm() {
     return (
         <form className="flex flex-col gap-4 w-full">
+            <h1 className="font-title text-4xl text-primary text-center">Entrar</h1>
             <Input
                 label="E-mail"
                 type="email"
