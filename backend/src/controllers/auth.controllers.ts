@@ -4,7 +4,7 @@ import { prisma } from '../lib/prisma';
 import { AppError } from '../lib/error';
 import { registerSchema, loginSchema } from '../schemas/auth.schemas';
 import { compare } from 'bcryptjs';
-import { sign } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 export const register = async (req: Request, res: Response) => {
 
@@ -77,7 +77,7 @@ export const login = async (req: Request, res: Response) => {
         throw new AppError('E-mail ou senha incorretos', 401);
     }
 
-    const token = sign(
+    const token = jwt.sign(
         {},
         process.env.JWT_SECRET || 'default_secret',
         {
