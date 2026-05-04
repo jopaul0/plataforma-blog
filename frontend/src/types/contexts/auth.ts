@@ -8,6 +8,7 @@ export interface User {
 export interface AuthContextData {
     user: User | null;
     isAuthenticated: boolean;
+    loading: boolean;
     signIn: (credentials: { user: User; token: string }) => void;
     signOut: () => void;
 }
