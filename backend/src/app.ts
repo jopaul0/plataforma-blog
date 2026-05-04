@@ -1,6 +1,6 @@
 import express from 'express';
 import 'dotenv/config';
-import { errorHandler } from './middlewares/errorHandler';
+import { errorHandler } from './middlewares/error.middleware';
 
 export const app = express()
 app.use(express.json())
@@ -10,5 +10,7 @@ app.get('/health', (_req, res) => {
 })
 
 // routes
+import { authRoutes } from './routes/auth.routes';
+app.use('/api/auth', authRoutes);
 
 app.use(errorHandler);
