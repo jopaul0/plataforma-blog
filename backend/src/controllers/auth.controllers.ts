@@ -13,9 +13,18 @@ export const register = async (req: Request, res: Response) => {
     }
     const { name, username, email, password } = result.data;
 
-    const userExists = await prisma.user.findUnique({ where: { email } });
+    const userExists = await prisma.user.findFirst({
+        where: {
+            OR: [
+                { email },
+                { username }
+            ]
+        }
+    });
+
     if (userExists) {
-        throw new AppError('Este e-mail já está em uso', 409);
+        const field = userExists.email === email ? 'e-mail' : 'nome de usuário';
+        throw new AppError(`Este ${field} já está em uso`, 409);
     }
 
     const hashedPassword = await hash(password, 10);

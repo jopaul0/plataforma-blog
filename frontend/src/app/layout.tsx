@@ -71,7 +71,10 @@ export default function RootLayout({
       lang="pt-br"
       className={`${dmSans.variable} ${amita.variable} ${tagFont.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <div id="modal-root" />
+      </body>
     </html>
   );
 }
