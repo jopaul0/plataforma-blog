@@ -13,3 +13,9 @@ export const registerSchema = z.object({
     .regex(/[0-9]/, 'A senha deve conter pelo menos um número')
     .regex(/[^a-zA-Z0-9]/, 'A senha deve conter pelo menos um caractere especial'),
 });
+
+
+export const loginSchema = z.object({
+  email: z.email('E-mail inválido'),
+  password: z.string().min(1, 'A senha é obrigatória'),
+});
