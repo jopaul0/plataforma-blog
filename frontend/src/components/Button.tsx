@@ -1,18 +1,20 @@
-import ButtonProps from "@/types/components/ButtonProps"
+import ButtonProps from "@/types/components/ButtonProps";
+import { base, variants } from "@/constants/btnVariants";
 
-export function Button({ children, variant = 'primary', ...props }: ButtonProps) {
-    const variants = {
-        primary: 'bg-primary text-white hover:bg-primary-hover shadow-md',
-        outline: 'border-2 border-white text-white hover:bg-white hover:text-primary'
-    }
+export function Button({
+    children,
+    variant = "primary",
+    className = "",
+    ...props
+}: ButtonProps) {
+
 
     return (
         <button
             {...props}
-            className={`w-full font-bold py-3 px-6 rounded-full transition-all duration-300 
-      active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${variants[variant]}`}
+            className={`${base} ${variants[variant]} ${className}`}
         >
             {children}
         </button>
-    )
+    );
 }

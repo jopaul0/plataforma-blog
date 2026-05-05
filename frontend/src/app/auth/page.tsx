@@ -7,6 +7,8 @@ import { FormTrack } from './components/form-track'
 import { AUTH_SPRING } from '@/constants/animation'
 import { Button } from '@/components/Button'
 import { PublicRoute } from '@/components/PublicRoute'
+import { ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
 export default function AuthPage() {
     const [isLogin, setIsLogin] = useState(true)
@@ -14,7 +16,16 @@ export default function AuthPage() {
 
     return (
         <PublicRoute>
-            <main className="min-h-screen flex items-center justify-center bg-background p-4 font-sans">
+            <div className="min-h-screen flex items-center justify-center bg-background p-4 font-sans">
+
+                <Link
+                    href="/"
+                    className="absolute top-8 left-8 flex items-center gap-2 text-text-muted hover:text-primary transition-colors group font-medium"
+                >
+                    <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+                    <span>Voltar ao início</span>
+                </Link>
+
                 <div className="relative w-full max-w-[950px] bg-surface rounded-[2rem] shadow-2xl overflow-hidden border border-border/50 flex flex-col md:flex-row md:h-[580px]">
 
                     <AuthBanner isLogin={isLogin} isMobile />
@@ -45,7 +56,7 @@ export default function AuthPage() {
                     </div>
 
                 </div>
-            </main>
+            </div>
         </PublicRoute>
     )
 }

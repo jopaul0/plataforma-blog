@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Header } from "@/components/Header";
 import "./globals.css";
-import { MainContainer } from '@/components/MainContainer';
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
@@ -77,9 +76,7 @@ export default function RootLayout({
       <body className="">
         <AuthProvider>
           <Header />
-          <MainContainer>
             {children}
-          </MainContainer>
         </AuthProvider>
         <div id="modal-root" />
       </body>

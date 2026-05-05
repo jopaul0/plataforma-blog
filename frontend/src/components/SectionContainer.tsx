@@ -1,8 +1,8 @@
-import MainContainerProps from "@/types/components/MainContainer";
+import SectionContainerProps from "@/types/components/SectionContainerProps";
 
-export function MainContainer({ children, className = "" }: MainContainerProps) {
+export function SectionContainer({ children, className = "" }: SectionContainerProps) {
     return (
-        <main
+        <section
             className={`
         w-full
         max-w-7xl
@@ -10,11 +10,10 @@ export function MainContainer({ children, className = "" }: MainContainerProps) 
         px-4
         sm:px-6
         lg:px-8
-        bg-background
         ${className}
       `}
         >
             {children}
-        </main>
+        </section>
     );
 }
