@@ -1,6 +1,7 @@
 import { DM_Sans, Amita, Shadows_Into_Light } from 'next/font/google'
 import type { Metadata } from "next";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { Header } from "@/components/Header";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -70,11 +71,12 @@ export default function RootLayout({
   return (
     <html
       lang="pt-br"
-      className={`${dmSans.variable} ${amita.variable} ${tagFont.variable} h-full antialiased`}
+      className={`${dmSans.variable} ${amita.variable} ${tagFont.variable} bg-background color-text h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="">
         <AuthProvider>
-          {children}
+          <Header />
+            {children}
         </AuthProvider>
         <div id="modal-root" />
       </body>
