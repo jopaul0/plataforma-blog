@@ -16,7 +16,7 @@ export default function AuthPage() {
 
     return (
         <PublicRoute>
-            <div className="min-h-screen flex items-center justify-center bg-background p-4 font-sans">
+            <main className="min-h-screen flex items-center justify-center bg-background p-4 font-sans">
 
                 <Link
                     href="/"
@@ -56,7 +56,7 @@ export default function AuthPage() {
                     </div>
 
                 </div>
-            </div>
+            </main>
         </PublicRoute>
     )
 }

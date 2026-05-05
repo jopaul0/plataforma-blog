@@ -10,7 +10,7 @@ export const variants = {
         "bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-400",
 
     outline:
-        "border border-primary text-primary hover:bg-primary hover:text-white focus:ring-primary",
+        "border border-white text-white hover:bg-white hover:text-primary focus:ring-primary",
 
     ghost:
         "text-primary hover:bg-primary/10 focus:ring-primary/30",
