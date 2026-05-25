@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../lib/prisma';
-import { listPostsSchema } from '../schemas/post.schemas';
+import { listPostsSchema, createPostSchema } from '../schemas/post.schemas';
 import { AppError } from '../lib/error';
+import { generateSlug } from '../utils/generateSlug';
+import type { PostParams } from '../@types/posts.types';
 
 export const getPosts = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -55,6 +57,101 @@ export const getPosts = async (req: Request, res: Response, next: NextFunction) 
                 currentPage: page,
             },
             posts
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getPostByUsernameAndSlug = async (req: Request<PostParams>, res: Response, next: NextFunction) => {
+    try {
+        const { username, slug } = req.params;
+
+        const post = await prisma.post.findFirst({
+            where: {
+                slug,
+                status: 'PUBLISHED',
+                deletedAt: null,
+                author: {
+                    username
+                }
+            },
+            include: {
+                author: {
+                    select: {
+                        id: true,
+                        name: true,
+                        username: true,
+                    }
+                }
+            }
+        });
+
+        if (!post) {
+            throw new AppError('Post não encontrado', 404);
+        }
+
+        return res.json(post);
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+export const createPost = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const result = createPostSchema.safeParse(req.body);
+
+        if (!result.success) {
+            const message = result.error.issues.map(err => err.message).join(', ');
+            throw new AppError(message, 400);
+        }
+
+        const { title, content, status } = result.data;
+        const authorId = req.user?.id;
+
+        if (!authorId) {
+            throw new AppError('Usuário não autenticado', 401);
+        }
+
+        let slug = generateSlug(title);
+
+        const existingPost = await prisma.post.findUnique({
+            where: {
+                authorId_slug: {
+                    authorId,
+                    slug
+                }
+            }
+        });
+
+        // Se este autor já tiver um post com esse slug, adiciona um sufixo numérico
+        if (existingPost) {
+            slug = `${slug}-${Date.now().toString().slice(-4)}`;
+        }
+
+        const newPost = await prisma.post.create({
+            data: {
+                title,
+                slug,
+                content,
+                status,
+                authorId,
+            },
+            include: {
+                author: {
+                    select: {
+                        id: true,
+                        name: true,
+                        username: true,
+                    }
+                }
+            }
+        });
+
+        return res.status(201).json({
+            message: 'Post criado com sucesso!',
+            post: newPost
         });
     } catch (error) {
         next(error);

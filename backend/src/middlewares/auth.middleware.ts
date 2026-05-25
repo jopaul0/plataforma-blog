@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { verify } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { AppError } from '../lib/error';
 import { TokenPayload } from '../@types/auth.types';
 
@@ -17,7 +17,7 @@ export const isAuthenticated = (
     const [, token] = authHeader.split(' ');
 
     try {
-        const decoded = verify(token, process.env.JWT_SECRET || 'default_secret');
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'default_secret');
 
         const { sub } = decoded as TokenPayload;
 
