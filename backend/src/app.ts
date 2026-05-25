@@ -17,6 +17,9 @@ app.get('/health', (_req, res) => {
 })
 
 import { authRoutes } from './routes/auth.routes';
+import { postRoutes } from './routes/post.routes';
+
 app.use('/api/auth', authRoutes);
+app.use('/api/posts', postRoutes);
 
 app.use(errorHandler);
