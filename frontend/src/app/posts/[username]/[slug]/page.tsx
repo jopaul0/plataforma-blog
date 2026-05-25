@@ -24,8 +24,8 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
     useEffect(() => {
         async function loadPost() {
             const response = await get<Post>(`/posts/${username}/${slug}`);
-            if (response) {
-                setPost(response);
+            if (response.success && response.data) {
+                setPost(response.data);
             }
         }
         loadPost();

@@ -11,7 +11,7 @@ import { StatusModal } from '@/components/StatusModal'
 
 
 export function RegisterForm() {
-    const { post, loading } = useApi()
+    const { post, loading, error } = useApi()
     const [modal, setModal] = useState<{ open: boolean; type: 'success' | 'error'; message: string }>({
         open: false,
         type: 'success',
@@ -30,24 +30,24 @@ export function RegisterForm() {
     }
 
     const onSubmit = async (data: RegisterData) => {
-        const response = await post<any>('/auth/register', data)
+        const response = await post<any>('/auth/register', data);
 
-        if (response) {
+        if (response.success) {
             setModal({
                 open: true,
                 type: 'success',
-                message: 'Sua conta foi criada com brilho! Agora você já pode entrar no portal.'
-            })
+                message: 'Sua conta foi criada com brilho!'
+            });
         } else {
             setModal({
                 open: true,
                 type: 'error',
-                message: 'Não conseguimos criar sua conta agora. Tente novamente em instantes.'
-            })
+                message:
+                    response.error ||
+                    'Ops! Algo deu errado ao criar sua conta.'
+            });
         }
-
-        console.log('Resposta do servidor:', response)
-    }
+    };
 
 
     return (

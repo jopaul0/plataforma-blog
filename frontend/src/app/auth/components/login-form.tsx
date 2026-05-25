@@ -20,16 +20,25 @@ export function LoginForm() {
     });
 
     const onSubmit = async (data: LoginData) => {
-        const response = await post<{ user: any, token: string }>('/auth/login', data);
+        const response = await post<{ user: any; token: string }>(
+            '/auth/login',
+            data
+        );
 
-        if (response) {
-            signIn({ user: response.user, token: response.token });
+        if (response.success && response.data) {
+            signIn({
+                user: response.data.user,
+                token: response.data.token
+            });
+
             window.location.href = '/dashboard';
         } else {
             setModal({
                 open: true,
                 type: 'error',
-                message: apiError || 'E-mail ou senha incorretos.'
+                message:
+                    response.error ||
+                    'E-mail ou senha incorretos.'
             });
         }
     };
