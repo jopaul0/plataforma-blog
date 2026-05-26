@@ -23,7 +23,7 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
 
     useEffect(() => {
         async function loadPost() {
-            const response = await get<Post>(`/posts/${username}/${slug}`);
+            const response = await get<Post>(`/posts/author/${username}/${slug}`);
             if (response.success && response.data) {
                 setPost(response.data);
             }

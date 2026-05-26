@@ -63,6 +63,39 @@ export const getPosts = async (req: Request, res: Response, next: NextFunction) 
     }
 };
 
+export const getMyPosts = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const authorId = req.user?.id;
+
+        if (!authorId) {
+            throw new AppError('Usuário não autenticado', 401);
+        }
+
+        const posts = await prisma.post.findMany({
+            where: {
+                authorId,
+                deletedAt: null
+            },
+            include: {
+                author: {
+                    select: {
+                        id: true,
+                        name: true,
+                        username: true,
+                    }
+                }
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+
+        return res.json(posts);
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const getPostByUsernameAndSlug = async (req: Request<PostParams>, res: Response, next: NextFunction) => {
     try {
         const { username, slug } = req.params;

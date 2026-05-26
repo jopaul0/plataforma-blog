@@ -5,23 +5,27 @@ import { PrivateRoute } from "@/components/PrivateRoute";
 import Link from 'next/link';
 import { Button } from '@/components/Button';
 import { useApi } from '@/hooks/useApi';
-import { PaginatedPostsResponse } from '@/types/api/posts';
 import { PlusCircle, Edit2, FileText, Loader2 } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function DashboardPage() {
-    const [postsData, setPostsData] = useState<PaginatedPostsResponse | null>(null);
+    const [posts, setPosts] = useState<any[] | null>(null);
     const { get, loading, error } = useApi();
+    const { loading: authLoading } = useAuth();
 
-    // Carrega os posts para gerenciamento no painel
     useEffect(() => {
+        if (authLoading) return;
+
         async function loadUserPosts() {
-            const response = await get<PaginatedPostsResponse>('/posts?perPage=20');
-            if (response.success && response.data) {
-                setPostsData(response.data);
+            const response = await get<any>('/posts/me');
+
+            if (response.success && response.data?.posts) {
+                setPosts(response.data.posts);
             }
         }
+
         loadUserPosts();
-    }, []);
+    }, [authLoading]);
 
     return (
         <PrivateRoute>
@@ -49,17 +53,24 @@ export default function DashboardPage() {
                     </div>
                 )}
 
+                {/* Feedback de Erro de API */}
+                {error && !loading && (
+                    <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-center mb-6">
+                        <p className="text-sm font-medium text-red-400">{error}</p>
+                    </div>
+                )}
+
                 {/* Lista de Posts para Edição */}
-                {!loading && postsData && (
+                {!loading && posts && (
                     <div className="flex flex-col gap-4">
-                        {postsData.posts.length === 0 ? (
+                        {posts.length === 0 ? (
                             <div className="text-center py-16 bg-surface rounded-2xl border border-border/40">
                                 <p className="text-text-muted font-medium">Você ainda não escreveu nenhum artigo.</p>
                             </div>
                         ) : (
                             <div className="overflow-hidden rounded-2xl border border-border/50 bg-surface">
                                 <div className="divide-y divide-border/40">
-                                    {postsData.posts.map((post) => (
+                                    {posts.map((post) => (
                                         <div
                                             key={post.id}
                                             className="flex flex-col sm:flex-row sm:items-center justify-between p-5 gap-4 hover:bg-background/40 transition-colors"
@@ -68,16 +79,25 @@ export default function DashboardPage() {
                                             <div className="flex items-start gap-3 max-w-xl">
                                                 <FileText className="text-primary/70 mt-1 flex-shrink-0" size={20} />
                                                 <div className="flex flex-col gap-1">
-                                                    <h3 className="font-semibold text-text text-base leading-snug">
-                                                        {post.title}
-                                                    </h3>
+                                                    <div className="flex items-center gap-2">
+                                                        <h3 className="font-semibold text-text text-base leading-snug">
+                                                            {post.title}
+                                                        </h3>
+                                                        {/* NOVO: Tag indicando se o post ainda é rascunho */}
+                                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border flex items-center gap-1 ${post.status === 'PUBLISHED'
+                                                            ? 'bg-green-500/10 text-green-400 border-green-500/20'
+                                                            : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
+                                                            }`}>
+                                                            {post.status === 'PUBLISHED' ? 'Publicado' : 'Rascunho'}
+                                                        </span>
+                                                    </div>
                                                     <span className="text-xs text-text-muted">
                                                         Criado em {new Date(post.createdAt).toLocaleDateString('pt-BR')}
                                                     </span>
                                                 </div>
                                             </div>
 
-                                            {/* O BOTÃO DE EDITAR FICA AQUI */}
+                                            {/* Botão de Editar */}
                                             <div className="flex items-center gap-2 self-end sm:self-center">
                                                 <Link href={`/posts/edit/${post.id}`} className="w-full sm:w-auto">
                                                     <Button

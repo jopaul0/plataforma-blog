@@ -37,7 +37,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
         async function loadPostData() {
             setFetchingPost(true);
 
-            const response = await get<any>(`/posts/${id}`);
+            const response = await get<any>(`/posts/id/${id}`);
             if (response.success && response.data) {
                 setTitle(response.data.title || '');
                 setContent(response.data.content || '');
