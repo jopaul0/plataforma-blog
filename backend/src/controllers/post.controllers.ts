@@ -97,6 +97,33 @@ export const getPostByUsernameAndSlug = async (req: Request<PostParams>, res: Re
     }
 };
 
+export const getPostById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { id } = req.params as { id: string };
+
+        const post = await prisma.post.findUnique({
+            where: { id },
+            include: {
+                author: {
+                    select: {
+                        id: true,
+                        name: true,
+                        username: true,
+                    }
+                }
+            }
+        });
+
+        if (!post || post.deletedAt) {
+            throw new AppError('Artigo não encontrado', 404);
+        }
+
+        return res.json(post);
+    } catch (error) {
+        next(error);
+    }
+};
+
 
 export const createPost = async (req: Request, res: Response, next: NextFunction) => {
     try {
