@@ -1,6 +1,12 @@
 import { useState, useCallback } from 'react';
 import { api } from '@/services/api';
 
+type ApiResponse<T> = {
+    success: boolean;
+    data?: T;
+    error?: string;
+};
+
 export function useApi() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -9,26 +15,51 @@ export function useApi() {
         method: 'get' | 'post' | 'put' | 'delete',
         url: string,
         data?: any
-    ): Promise<T | null> => {
+    ): Promise<ApiResponse<T>> => {
         setLoading(true);
         setError(null);
 
         try {
             const response = await api[method]<T>(url, data);
-            return response.data;
+
+            return {
+                success: true,
+                data: response.data
+            };
         } catch (err: any) {
-            const message = err.response?.data?.message || 'Erro na comunicação com o servidor';
+            const message =
+                err.response?.data?.message ||
+                'Erro na comunicação com o servidor';
+
             setError(message);
-            return null;
+
+            return {
+                success: false,
+                error: message
+            };
         } finally {
             setLoading(false);
         }
     }, []);
 
-    const get = <T>(url: string) => request<T>('get', url);
-    const post = <T>(url: string, data: any) => request<T>('post', url, data);
-    const put = <T>(url: string, data: any) => request<T>('put', url, data);
-    const del = <T>(url: string) => request<T>('delete', url);
+    const get = <T>(url: string) =>
+        request<T>('get', url);
 
-    return { get, post, put, del, loading, error };
+    const post = <T>(url: string, data: any) =>
+        request<T>('post', url, data);
+
+    const put = <T>(url: string, data: any) =>
+        request<T>('put', url, data);
+
+    const del = <T>(url: string) =>
+        request<T>('delete', url);
+
+    return {
+        get,
+        post,
+        put,
+        del,
+        loading,
+        error
+    };
 }

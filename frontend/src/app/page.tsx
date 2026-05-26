@@ -22,7 +22,7 @@ export default function HomePage() {
       );
 
       if (response) {
-        setPostsData(response);
+        setPostsData(response.data || null);
       }
     }
 
