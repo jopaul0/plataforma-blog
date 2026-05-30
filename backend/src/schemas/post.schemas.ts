@@ -12,3 +12,9 @@ export const createPostSchema = z.object({
     }).min(10, 'O conteúdo deve ter pelo menos 10 caracteres'),
     status: z.enum(['DRAFT', 'PUBLISHED']).optional().default('DRAFT'),
 });
+
+export const updatePostSchema = z.object({
+    title: z.string().min(5, 'O título deve ter pelo menos 5 caracteres').max(100, 'O título deve ter no máximo 100 caracteres').optional(),
+    content: z.string().min(10, 'O conteúdo deve ter pelo menos 10 caracteres').optional(),
+    status: z.enum(['DRAFT', 'PUBLISHED']).optional(),
+});
