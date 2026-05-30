@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, login, checkUsername, getProfile } from '../controllers/auth.controllers';
+import { register, login, checkUsername, getProfile, getPublicProfile } from '../controllers/auth.controllers';
 import { authLimiter } from '../middlewares/limiter.middleware';
 import { isAuthenticated } from '../middlewares/auth.middleware';
 
@@ -46,5 +46,30 @@ authRoutes.get('/check-username', checkUsername);
  * }
  */
 authRoutes.get('/me', isAuthenticated, getProfile);
+
+/**
+ * GET /api/auth/users/:id
+ * @description Retorna o perfil público de um autor e as suas respectivas publicações publicadas.
+ * @response 200 OK
+ * {
+ * "id": "user-uuid-1234",
+ * "name": "Nuno Silva",
+ * "username": "nuno_dev",
+ * "posts": [
+ * {
+ * "id": "post-uuid-999",
+ * "title": "Arquitetura limpa com TypeScript",
+ * "slug": "arquitetura-limpa-com-typescript",
+ * "content": "Conteúdo do artigo...",
+ * "status": "PUBLISHED",
+ * "createdAt": "2026-05-30T10:00:00.000Z",
+ * "updatedAt": "2026-05-30T10:00:00.000Z",
+ * "deletedAt": null,
+ * "authorId": "user-uuid-1234"
+ * }
+ * ]
+ * }
+ */
+authRoutes.get('/users/:id', getPublicProfile);
 
 export { authRoutes };
