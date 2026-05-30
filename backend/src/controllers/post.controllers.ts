@@ -90,7 +90,9 @@ export const getMyPosts = async (req: Request, res: Response, next: NextFunction
             }
         });
 
-        return res.json(posts);
+        return res.json({
+            posts
+        });
     } catch (error) {
         next(error);
     }
@@ -284,6 +286,41 @@ export const updatePost = async (req: Request, res: Response, next: NextFunction
         return res.json({
             message: 'Post atualizado com sucesso!',
             post: updatedPost
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const deletePost = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { id } = req.params as { id: string };
+        const authorId = req.user?.id;
+
+        if (!authorId) {
+            throw new AppError('Usuário não autenticado', 401);
+        }
+
+        const post = await prisma.post.findUnique({
+            where: { id }
+        });
+
+        if (!post || post.deletedAt) {
+            throw new AppError('Post não encontrado', 404);
+        }
+
+        if (post.authorId !== authorId) {
+            throw new AppError('Você não tem permissão para deletar este post', 403);
+        }
+
+        // Soft delete preenchendo o campo deletedAt
+        await prisma.post.update({
+            where: { id },
+            data: { deletedAt: new Date() }
+        });
+
+        return res.json({
+            message: 'Artigo removido com sucesso!'
         });
     } catch (error) {
         next(error);
