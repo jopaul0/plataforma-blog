@@ -99,43 +99,41 @@ export const login = async (req: Request, res: Response) => {
 
 export const checkUsername = async (req: Request, res: Response) => {
     const { username } = req.query;
+    if (!username || typeof username !== 'string') throw new AppError('Nome de usuário inválido', 400);
 
-    if (!username || typeof username !== 'string') {
-        throw new AppError('Nome de usuário não informado', 400);
-    }
-
-    const user = await prisma.user.findUnique({
-        where: { username }
-    });
-
-    return res.json({
-        available: !user
-    });
+    const user = await prisma.user.findUnique({ where: { username } });
+    return res.json({ available: !user });
 };
 
 export const getProfile = async (req: Request, res: Response) => {
     const userId = req.user?.id;
-
-    if (!userId) {
-        throw new AppError('Usuário não autenticado', 401);
-    }
+    if (!userId) throw new AppError('Usuário não autenticado', 401);
 
     const user = await prisma.user.findUnique({
         where: { id: userId },
+        select: { id: true, name: true, username: true, email: true, createdAt: true }
+    });
+
+    if (!user) throw new AppError('Usuário não encontrado', 404);
+    return res.json({ user });
+};
+
+export const getPublicProfile = async (req: Request, res: Response) => {
+    const { id } = req.params as { id: string };
+
+    const user = await prisma.user.findUnique({
+        where: { id },
         select: {
             id: true,
             name: true,
             username: true,
-            email: true,
-            createdAt: true
+            posts: {
+                where: { status: 'PUBLISHED', deletedAt: null },
+                orderBy: { createdAt: 'desc' }
+            }
         }
     });
 
-    if (!user) {
-        throw new AppError('Usuário não encontrado', 404);
-    }
-
-    return res.json({
-        user
-    });
+    if (!user) throw new AppError('Autor não encontrado', 404);
+    return res.json(user);
 };
