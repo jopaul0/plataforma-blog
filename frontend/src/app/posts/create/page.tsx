@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useApi } from '@/hooks/useApi';
+import { usePosts } from '@/contexts/PostsContext';
 import { SectionContainer } from '@/components/SectionContainer';
 import { Input } from '@/components/Input';
 import { Button } from '@/components/Button';
@@ -13,6 +14,8 @@ import Link from 'next/link';
 export default function CreatePostPage() {
     const router = useRouter();
     const { post, loading, error } = useApi();
+
+    const { invalidateUserPosts, invalidateHomePosts } = usePosts();
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -30,21 +33,26 @@ export default function CreatePostPage() {
             return;
         }
 
-        const response = await post('/posts', {
+        const response = await post<any>('/posts', {
             title,
             content,
             status,
         });
 
-        if (response) {
+        if (response.success) {
+            invalidateUserPosts();
+            invalidateHomePosts();
+
             router.push('/dashboard');
             router.refresh();
+        } else {
+            setFormError(response.error || 'Não foi possível salvar a publicação.');
         }
     };
 
     return (
         <PrivateRoute>
-            <SectionContainer className="py-12 max-w-3xl">
+            <SectionContainer className="py-12 max-w-3xl font-sans">
                 <div className="flex flex-col gap-4 mb-8">
                     <Link
                         href="/dashboard"
@@ -68,7 +76,7 @@ export default function CreatePostPage() {
                 <div className="flex flex-col gap-6 bg-surface p-6 md:p-8 rounded-2xl border border-border/60">
                     <div>
                         <Input
-                            label='Título do Artigo'
+                            label="Título do Artigo"
                             type="text"
                             placeholder="Ex: Dominando a Arquitetura com Clean Code"
                             value={title}
@@ -76,11 +84,10 @@ export default function CreatePostPage() {
                             disabled={loading}
                         />
                     </div>
-
                     <div>
-                        <label className="block text-sm font-bold text-text mb-2">Conteúdo do Post</label>
+                        <label className="block text-sm font-medium text-text-muted mb-2">Conteúdo do Post</label>
                         <textarea
-                            className="w-full min-h-[300px] p-4 bg-background text-text border border-border/60 rounded-xl outline-none focus:border-primary/60 placeholder:text-text-muted/60 font-sans text-base transition-colors resize-y"
+                            className="w-full min-h-[300px] p-4 bg-background text-text border border-border/60 rounded-xl outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-text-muted/50 font-sans text-base transition-all resize-y shadow-sm"
                             placeholder="Escreva aqui o corpo do seu artigo completo..."
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
@@ -99,7 +106,6 @@ export default function CreatePostPage() {
                             <Save size={16} />
                             Salvar como Rascunho
                         </Button>
-
                         <Button
                             variant="primary"
                             onClick={() => handleSubmit('PUBLISHED')}
