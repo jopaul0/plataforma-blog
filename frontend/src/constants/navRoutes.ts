@@ -1,13 +1,15 @@
 const navRoutes = {
-    "isAuthenticated": [
-        { name: 'Explorar', href: '/' },
-        { name: 'Posts', href: '/posts' },
-        { name: 'Dashboard', href: '/dashboard' },
+    default: [
+        { name: 'Início', href: '/' },
+        { name: 'Sobre', href: '/about' },
+        { name: 'Pesquisar', href: '/search' },
     ],
-    "default": [
-        { name: 'Explorar', href: '/' },
-        { name: 'Sobre', href: '/sobre' },
-    ]
-}
+    isAuthenticated: [
+        { name: 'Início', href: '/' },
+        { name: 'Painel', href: '/dashboard' },
+        { name: 'Sobre', href: '/about' },
+        { name: 'Pesquisar', href: '/search' },
+    ],
+};
 
 export default navRoutes;

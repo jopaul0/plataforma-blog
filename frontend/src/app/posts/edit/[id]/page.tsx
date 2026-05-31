@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useApi } from '@/hooks/useApi';
+import { usePosts } from '@/contexts/PostsContext';
 import { SectionContainer } from '@/components/SectionContainer';
 import { Input } from '@/components/Input';
 import { Button } from '@/components/Button';
@@ -20,30 +21,27 @@ interface EditPostPageProps {
 export default function EditPostPage({ params }: EditPostPageProps) {
     const { id } = use(params);
     const router = useRouter();
-
     const { get, put, loading, error } = useApi();
 
-    // Estados dos campos do Artigo
+    const { invalidateUserPosts, invalidateHomePosts } = usePosts();
+
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [status, setStatus] = useState<'DRAFT' | 'PUBLISHED'>('DRAFT');
     const [createdAt, setCreatedAt] = useState('');
     const [username, setUsername] = useState('');
-
     const [formError, setFormError] = useState('');
     const [fetchingPost, setFetchingPost] = useState(true);
 
     useEffect(() => {
         async function loadPostData() {
             setFetchingPost(true);
-
             const response = await get<any>(`/posts/id/${id}`);
             if (response.success && response.data) {
                 setTitle(response.data.title || '');
                 setContent(response.data.content || '');
                 setStatus(response.data.status || 'DRAFT');
                 setCreatedAt(response.data.createdAt || '');
-
                 if (response.data.author?.username) {
                     setUsername(response.data.author.username);
                 }
@@ -78,6 +76,10 @@ export default function EditPostPage({ params }: EditPostPageProps) {
         });
 
         if (response.success) {
+            // Limpa o cache local em memória para que o feed e o dashboard busquem o dado novo editado
+            invalidateUserPosts();
+            invalidateHomePosts();
+
             router.push('/dashboard');
             router.refresh();
         } else {
@@ -96,8 +98,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
 
     return (
         <PrivateRoute>
-            <SectionContainer className="py-12 max-w-3xl">
-
+            <SectionContainer className="py-12 max-w-3xl font-sans">
                 {/* Cabeçalho da Página com Metadados */}
                 <div className="flex flex-col gap-4 mb-8">
                     <Link
@@ -107,22 +108,17 @@ export default function EditPostPage({ params }: EditPostPageProps) {
                         <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
                         <span>Voltar para o Dashboard</span>
                     </Link>
-
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <h1 className="font-title text-3xl md:text-4xl font-black text-text">
                             Editar Artigo
                         </h1>
-
-                        {/* Indicador visual do status vindo da API */}
                         <span className={`text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full border self-start ${status === 'PUBLISHED'
                             ? 'bg-green-500/10 text-green-400 border-green-500/20'
                             : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
                             }`}>
-                            {status === 'PUBLISHED' ? '● Publicado' : '○ Rascunho'}
+                            {status === 'PUBLISHED' ? 'Publicado' : 'Rascunho'}
                         </span>
                     </div>
-
-                    {/* Exibição da Data de Criação Nativa */}
                     {createdAt && (
                         <div className="flex items-center gap-1.5 text-xs text-text-muted font-medium">
                             <Calendar size={14} className="text-primary/70" />
@@ -139,10 +135,7 @@ export default function EditPostPage({ params }: EditPostPageProps) {
 
                 {/* Formulário Controlado */}
                 <div className="flex flex-col gap-6 bg-surface p-6 md:p-8 rounded-2xl border border-border/60">
-
-                    {/* Input de Título */}
                     <div>
-                        {/* CORREÇÃO: Forçando o mapeamento explícito do value e do name para sincronizar o forwardRef */}
                         <Input
                             label="Título do Artigo"
                             name="title"
@@ -151,8 +144,6 @@ export default function EditPostPage({ params }: EditPostPageProps) {
                             onChange={(e) => setTitle(e.target.value)}
                             disabled={loading}
                         />
-
-                        {/* Prévia dinâmica de URL baseado na alteração do título */}
                         {title && username && (
                             <div className="mt-2 flex items-center gap-1.5 text-xs text-text-muted bg-background/50 p-2.5 rounded-xl border border-border/40 font-mono">
                                 <Link2 size={13} className="text-primary flex-shrink-0" />
@@ -163,7 +154,6 @@ export default function EditPostPage({ params }: EditPostPageProps) {
                         )}
                     </div>
 
-                    {/* Textarea de Conteúdo */}
                     <div>
                         <label className="block text-sm font-medium text-text-muted mb-2">Conteúdo do Post</label>
                         <textarea
@@ -185,7 +175,6 @@ export default function EditPostPage({ params }: EditPostPageProps) {
                             <Save size={16} />
                             Salvar como Rascunho
                         </Button>
-
                         <Button
                             variant="primary"
                             onClick={() => handleSubmit('PUBLISHED')}

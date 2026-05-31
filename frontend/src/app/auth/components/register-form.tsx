@@ -81,7 +81,7 @@ export function RegisterForm() {
                     {...register('password')}
                 />
                 <div className="mt-2">
-                    <Button type="submit" disabled={loading}>
+                    <Button type="submit" disabled={loading} className="w-full">
                         {loading ? 'PROCESSANDO...' : 'CRIAR CONTA'}
                     </Button>
                 </div>

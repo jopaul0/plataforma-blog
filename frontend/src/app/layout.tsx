@@ -1,6 +1,7 @@
 import { DM_Sans, Amita, Shadows_Into_Light } from 'next/font/google'
 import type { Metadata } from "next";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { PostsProvider } from "@/contexts/PostsContext";
 import { Header } from "@/components/Header";
 import "./globals.css";
 
@@ -73,10 +74,12 @@ export default function RootLayout({
       lang="pt-br"
       className={`${dmSans.variable} ${amita.variable} ${tagFont.variable} bg-background color-text h-full antialiased`}
     >
-      <body className="">
+      <body>
         <AuthProvider>
-          <Header />
+          <PostsProvider>
+            <Header />
             {children}
+          </PostsProvider>
         </AuthProvider>
         <div id="modal-root" />
       </body>
