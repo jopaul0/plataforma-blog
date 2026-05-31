@@ -67,7 +67,7 @@ export function LoginForm() {
                     </a>
                 </div>
                 <div className="mt-4">
-                    <Button type="submit" disabled={loading}>
+                    <Button type="submit" disabled={loading} className="w-full">
                         {loading ? 'AUTENTICANDO...' : 'ENTRAR'}
                     </Button>
                 </div>

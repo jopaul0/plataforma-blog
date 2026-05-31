@@ -12,17 +12,39 @@ export const getPosts = async (req: Request, res: Response, next: NextFunction) 
             throw new AppError(message, 400);
         }
 
-        const { page, perPage } = result.data;
+        const { page, perPage, search } = result.data;
         const skip = (page - 1) * perPage;
         const currentUserId = req.user?.id;
 
+        const whereCondition: any = {
+            status: 'PUBLISHED',
+            deletedAt: null,
+        };
+
+        if (search && search.trim() !== '') {
+            whereCondition.OR = [
+                {
+                    title: {
+                        contains: search.trim(),
+                        mode: 'insensitive',
+                    },
+                },
+                {
+                    content: {
+                        contains: search.trim(),
+                        mode: 'insensitive',
+                    },
+                },
+            ];
+        }
+
         const [totalItems, posts] = await prisma.$transaction([
-            prisma.post.count({ where: { status: 'PUBLISHED', deletedAt: null } }),
+            prisma.post.count({ where: whereCondition }),
             prisma.post.findMany({
-                where: { status: 'PUBLISHED', deletedAt: null },
+                where: whereCondition,
                 include: {
                     author: { select: { id: true, name: true, username: true } },
-                    _count: { select: { likes: true } }, // Task 17-1
+                    _count: { select: { likes: true } },
                     likes: currentUserId ? { where: { userId: currentUserId } } : false
                 },
                 orderBy: { createdAt: 'desc' },

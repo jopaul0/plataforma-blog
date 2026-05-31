@@ -38,7 +38,7 @@ export default function AuthPage() {
                     >
                         <AuthBanner isLogin={isLogin} />
                         <div className="w-full max-w-[180px] mt-10">
-                            <Button variant="outline" onClick={toggle}>
+                            <Button variant="outline" onClick={toggle} className="w-full">
                                 {isLogin ? 'CRIAR CONTA' : 'ENTRAR'}
                             </Button>
                         </div>
